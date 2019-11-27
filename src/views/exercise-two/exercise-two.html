@@ -8,25 +8,129 @@
 {% endblock %}
 
 {% block introduction %}
-	{# TODO: add title and description of exercise #}
-	<h1>[TITLE]</h1>
-	<p>[DESCRIPTION]</p>
+<h1>Exercise two</h1>
+<p>In this exercise we'll be mapping functionality to our controller buttons.</p>
 {% endblock %}
 
 {% block html %}
-	<section class="cc-html-playground">
-		{# TODO: add HTML of exercise #}
-	</section>
+
+<section class="cc-html-playground">
+	<div class="controller-status controller-disconnected">
+	</div>
+	<div class="canvas-container">
+		<canvas width="500" height="500"></canvas>
+	</div>
+</section>
 {% endblock %}
 
 {% block styles %}
-	<style type="text/css">
-		{# TODO: add CSS of exercise #}
-	</style>
+<style type="text/css">
+	.controller-status {
+		margin: 0 auto;
+		padding: 10px;
+		display: block;
+		width: 40%;
+		height: auto;
+		border: gray 1px solid;
+	}
+
+	.controller-connected {
+		background-color: green;
+	}
+
+	.controller-disconnected {
+		background-color: red;
+	}
+
+	canvas {
+		display: block;
+		margin: 0 auto;
+		border: 1px solid #d3d3d3;
+		background-color: #f1f1f1;
+	}
+
+	.canvas-container {
+		margin-top: 20px;
+		width: 100%;
+		height: auto;
+	}
+</style>
 {% endblock %}
 
 {% block scripts %}
-	<script type="text/javascript">
-		{# TODO: add JavaScript of exercise #}
-	</script>
+<script type="text/javascript">
+	let rAF =
+		window.mozRequestAnimationFrame ||
+		window.requestAnimationFrame;
+
+	let controllerStatusEl = document.querySelector('.controller-status');
+
+	// Check if gamepad is disconnected
+	window.addEventListener("gamepaddisconnected", function (e) {
+		// Do something on disconnect...
+		controllerStatusEl.innerHTML = "Gamepad disconnected, Press a button to activate your game controller.";
+		controllerStatusEl.classList.replace('controller-connected', 'controller-disconnected');
+	});
+
+	// Check if gamepad is connected
+	window.addEventListener("gamepadconnected", function (e) {
+		// Show name of gamepad in the DOM so that the user has some feedback
+		controllerStatusEl.innerHTML = "Gamepad connected: " + e.gamepad.id;
+		controllerStatusEl.classList.replace('controller-disconnected','controller-connected');
+
+		// Fire update loop
+		updateLoop();
+	});
+
+	let stage = document.querySelector('canvas'), // Get the canvas element by Id
+		ctx = stage.getContext('2d'), // Canvas 2d rendering context
+		x = 10, //intial horizontal position of drawn rectangle
+		y = 10, //intial vertical position of drawn rectangle
+		wid = 20, //width of the drawn rectangle
+		hei = 20; //height of the drawn rectangle
+
+	//Draw Rectangle function
+	function drawRect(x,y,wid,hei) {
+		ctx.fillStyle = '#666'; // Fill color of rectangle drawn
+		ctx.fillRect(x, y, wid, hei); //This will draw a rectangle of 20x20
+	}
+
+	drawRect(x,y,wid,hei); //Drawing rectangle on initial load
+
+	function moveRight() {
+		x = x+20;
+		ctx.clearRect(0,0, 500, 500);
+		drawRect(x,y,wid,hei);
+	}
+
+	function moveLeft() {
+		x = x-20;
+		ctx.clearRect(0,0, 500, 500);
+		drawRect(x,y,wid,hei);
+	}
+
+	function moveUp() {
+		y = y-20;
+		ctx.clearRect(0,0, 500, 500);
+		drawRect(x,y,wid,hei);
+	}
+
+	function moveDown() {
+		y = y+20;
+		ctx.clearRect(0,0, 500, 500);
+		drawRect(x,y,wid,hei);
+	}
+
+	// Update loop for polling the gamepad object
+	function updateLoop() {
+		// Store gamepad object into variable
+		let gamepad = navigator.getGamepads()[0];
+
+		// TODO: map 'move' functions to controller buttons
+
+		setTimeout(function () {
+			rAF(updateLoop);
+		}, 100);
+	}
+</script>
 {% endblock %}
