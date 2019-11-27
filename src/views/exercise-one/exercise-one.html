@@ -1,74 +1,76 @@
 {% extends "views/_base/base.html" %}
 
 {% block navigation %}
-	<nav class="cc-navigation">
-		<a href="/" class="cc-back-link">&#8592; back to overview</a>
-		<a href="/exercise-one-solution/" class="cc-answer-link">See answer &#8594;</a>
-	</nav>
+<nav class="cc-navigation">
+	<a href="/" class="cc-back-link">&#8592; back to overview</a>
+</nav>
 {% endblock %}
 
 {% block introduction %}
-	{# TODO: add title and description of exercise #}
-	<h1>Exercise one</h1>
-	<p>In this exercise we'll be looking at how to connect the gamepad with the browser and how you can read out the object</p>
+<h1>Exercise one</h1>
+<p>In this exercise we'll be looking at how to connect the gamepad with the browser and how you can read out the object</p>
 {% endblock %}
 
 {% block html %}
-	<section class="cc-html-playground">
-		<div class="controller-status">
-		</div>
-	</section>
+<section class="cc-html-playground">
+	<div class="controller-status controller-disconnected">
+	</div>
+</section>
 {% endblock %}
 
 {% block styles %}
-	<style type="text/css">
-		.controller-status {
-			margin: 0 auto;
-			display: block;
-			width: 500px;
-			height: 50px;
-			border: gray 1px solid;
-		}
+<style type="text/css">
+	.controller-status {
+		margin: 0 auto;
+		padding: 10px;
+		display: block;
+		width: 40%;
+		height: auto;
+		border: gray 1px solid;
+	}
 
-		.controller-connected {
-			background-color: green;
-		}
+	.controller-connected {
+		background-color: green;
+	}
 
-		.controller-disconnected {
-			background-color: red;
-		}
-	</style>
+	.controller-disconnected {
+		background-color: red;
+	}
+</style>
 {% endblock %}
 
 {% block scripts %}
-	<script type="text/javascript">
-		let rAF =
-			window.mozRequestAnimationFrame ||
-			window.requestAnimationFrame;
+<script type="text/javascript">
+	let rAF =
+		window.mozRequestAnimationFrame ||
+		window.requestAnimationFrame;
 
-		// Check if gamepad is connected
-		window.addEventListener("gamepadconnected", function (e) {
-			// Show name of gamepad in the DOM so that the user has feedback
-			document.querySelector(".controller").innerHTML = "Gamepad connected: " + e.gamepad.id;
+	let controllerStatusEl = document.querySelector('.controller-status');
 
-			// Fire update loop
-			updateLoop();
-		});
+	// TODO: Check if gamepad is disconnected
+	window.addEventListener("", function (e) {
+		// Do something on disconnect...
+		controllerStatusEl.innerHTML = "Gamepad disconnected, Press a button to activate your game controller.";
+		controllerStatusEl.classList.replace('controller-connected', 'controller-disconnected');
+	});
 
-		// Check if gamepad is disconnected
-		window.addEventListener("gamepaddisconnected", function () {
-			// Do something on disconnect...
-			document.querySelector(".controller").innerHTML = "Gamepad disconnected, Press a button to activate your game controller.";
-		});
+	// TODO: Check if gamepad is connected
+	window.addEventListener("", function (e) {
+		// Show name of gamepad in the DOM so that the user has some feedback
+		controllerStatusEl.innerHTML = "Gamepad connected: " + e.gamepad.id;
+		controllerStatusEl.classList.replace('controller-disconnected','controller-connected');
 
-		// Update loop for polling the gamepad object
-		function updateLoop() {
-			// Store gamepad object into variable
-			let gp = navigator.getGamepads()[0];
+		// Fire update loop
+		updateLoop();
+	});
 
-			setTimeout(function () {
-				rAF(updateLoop);
-			}, 100);
-		}
-	</script>
+	// Update loop for polling the gamepad object
+	function updateLoop() {
+		// TODO: Store gamepad object or event into variable
+
+		setTimeout(function () {
+			rAF(updateLoop);
+		}, 100);
+	}
+</script>
 {% endblock %}
