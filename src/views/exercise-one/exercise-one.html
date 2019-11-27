@@ -1,0 +1,74 @@
+{% extends "views/_base/base.html" %}
+
+{% block navigation %}
+	<nav class="cc-navigation">
+		<a href="/" class="cc-back-link">&#8592; back to overview</a>
+		<a href="/exercise-one-solution/" class="cc-answer-link">See answer &#8594;</a>
+	</nav>
+{% endblock %}
+
+{% block introduction %}
+	{# TODO: add title and description of exercise #}
+	<h1>Exercise one</h1>
+	<p>In this exercise we'll be looking at how to connect the gamepad with the browser and how you can read out the object</p>
+{% endblock %}
+
+{% block html %}
+	<section class="cc-html-playground">
+		<div class="controller-status">
+		</div>
+	</section>
+{% endblock %}
+
+{% block styles %}
+	<style type="text/css">
+		.controller-status {
+			margin: 0 auto;
+			display: block;
+			width: 500px;
+			height: 50px;
+			border: gray 1px solid;
+		}
+
+		.controller-connected {
+			background-color: green;
+		}
+
+		.controller-disconnected {
+			background-color: red;
+		}
+	</style>
+{% endblock %}
+
+{% block scripts %}
+	<script type="text/javascript">
+		let rAF =
+			window.mozRequestAnimationFrame ||
+			window.requestAnimationFrame;
+
+		// Check if gamepad is connected
+		window.addEventListener("gamepadconnected", function (e) {
+			// Show name of gamepad in the DOM so that the user has feedback
+			document.querySelector(".controller").innerHTML = "Gamepad connected: " + e.gamepad.id;
+
+			// Fire update loop
+			updateLoop();
+		});
+
+		// Check if gamepad is disconnected
+		window.addEventListener("gamepaddisconnected", function () {
+			// Do something on disconnect...
+			document.querySelector(".controller").innerHTML = "Gamepad disconnected, Press a button to activate your game controller.";
+		});
+
+		// Update loop for polling the gamepad object
+		function updateLoop() {
+			// Store gamepad object into variable
+			let gp = navigator.getGamepads()[0];
+
+			setTimeout(function () {
+				rAF(updateLoop);
+			}, 100);
+		}
+	</script>
+{% endblock %}
